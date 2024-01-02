@@ -30,19 +30,12 @@ def image_crop(x, offset_h, offset_w, target_h, target_w, size=[32,32]):
     x_crop = tf.image.resize_bilinear(x_crop, size=size, align_corners=True)
     return x_crop
 
-def cropping(x, aug):
-    b, h, w, c = np.shape(x).as_list()
+def cropping(x, aug_list):
+    b, h, w, c = np.shape(x)
     img_size = [h, w]
-    boxes = [[0,      0,      h,      w],
-             [0,      0,      h*0.75, w*0.75],
-             [0,      w*0.25, h*0.75, w*0.75],
-             [h*0.25, 0,      h*0.75, w*0.75],
-             [h*0.25, w*0.25, h*0.75, w*0.75]]
-    x_crop = []
-    for i in range(np.shape(boxes)[0]):
-        cropped = image_crop(x, int(boxes[i][0]), int(boxes[i][1]), int(boxes[i][2]), int(boxes[i][3]), size=img_size)
-        x_crop.append(cropped)
-    return x_crop
+    boxes = [[0, 0, h, w], [0, 0, h*0.75, w*0.75], [0, w*0.25, h*0.75, w*0.75], [h*0.25, 0, h*0.75, w*0.75], [h*0.25, w*0.25, h*0.75, w*0.75]]
+    return [image_crop(x, int(box[0]), int(box[1]), int(box[2]), int(box[3]), size=img_size) for box in boxes]
+
 
 def augmenting_data(x, aug, aug_list):
     if aug   == 'rotation':
