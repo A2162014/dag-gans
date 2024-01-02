@@ -25,9 +25,9 @@ def fliprot(x, aug):
     x_flip.append(tf.image.flip_up_down(x_hflip))
     return x_flip
 
-def image_crop(x, offset_h, offset_w, target_h, target_w, size=[32,32]):
+def image_crop(x, offset_h, offset_w, target_h, target_w, size=[32, 32]):
     x_crop = tf.image.crop_to_bounding_box(x, offset_h, offset_w, target_h, target_w)
-    x_crop = tf.image.resize_bilinear(x_crop, size=size, align_corners=True)
+    x_crop = tf.image.resize(x_crop, size=size, method=tf.image.ResizeMethod.BILINEAR)
     return x_crop
 
 def cropping(x, aug_list):
